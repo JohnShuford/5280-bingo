@@ -1,0 +1,8 @@
+# macOS
+.DS_Store
+
+# Brainstorming companion artifacts
+.superpowers/
+
+# Node (if a static server / tooling is added later)
+node_modules/
