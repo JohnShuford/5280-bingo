@@ -66,6 +66,10 @@ export function isDone(id) {
 }
 
 // Flip one activity's done state and persist it.
+// Note: `next` is built from the last-known `doneSet`, so two near-simultaneous toggles
+// could theoretically clobber each other before the Firebase echo lands. For a 2-person
+// household board this is negligible and self-corrects on the next interaction; switch to
+// a Realtime Database transaction if the board ever gets more concurrent writers.
 export async function toggle(id) {
   const next = new Set(doneSet);
   if (next.has(id)) next.delete(id);
