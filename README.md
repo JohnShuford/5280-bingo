@@ -31,23 +31,31 @@ activity data integrity.
 ## Firebase setup (enables cross-device sync)
 
 1. Go to https://console.firebase.google.com/ and create a free project.
-2. Build → **Realtime Database** → Create database (start in **test mode** for this
-   private family board; rules can be locked down later).
+2. Build → **Realtime Database** → Create database.
 3. Project settings → **Your apps** → add a **Web app** → copy the config object.
-4. Paste it into `firebase-config.js`, e.g.:
+4. Paste *only the config object* into `firebase-config.js` as
+   `export const firebaseConfig = { ... }` (don't paste the `import`/`initializeApp`
+   lines from the console snippet — `store.js` handles SDK loading and init).
+5. **Lock down the database rules.** In Realtime Database → **Rules**, paste the contents
+   of [`database.rules.json`](./database.rules.json) and Publish. This restricts the
+   database to the board's `done` map (boolean values only), so it can't be read elsewhere
+   or abused as free storage.
 
-   ```js
-   export const firebaseConfig = {
-     apiKey: "AIza...",
-     authDomain: "your-project.firebaseapp.com",
-     databaseURL: "https://your-project-default-rtdb.firebaseio.com",
-     projectId: "your-project",
-     appId: "1:1234567890:web:abcdef"
-   };
-   ```
+The app auto-detects `databaseURL` and switches from the local fallback to live sync.
 
-The app auto-detects `databaseURL` and switches from local fallback to live sync. The key
-being visible in the page is expected and fine — only Rachel & Steven use this private URL.
+### A note on the API key
+
+A Firebase **web** API key is an identifier, not a secret — it is designed to ship in
+client-side code and is safe to be public. (See
+https://firebase.google.com/docs/projects/api-keys.) Your data is protected by the
+**security rules** above, not by hiding the key. On any static deploy (like GitHub Pages)
+the config is delivered to every visitor's browser regardless of repo visibility, so the
+correct hardening is the rules — not a private repo.
+
+**Optional extra hardening:** in Google Cloud Console → APIs & Services → Credentials,
+edit the auto-created browser API key and set **Application restrictions → HTTP referrers**
+to `johnshuford.github.io/*` and `localhost:*`. (Safe here because this project doesn't use
+Firebase Auth, which is the one service that can be sensitive to referrer restrictions.)
 
 ## Deploy to GitHub Pages
 

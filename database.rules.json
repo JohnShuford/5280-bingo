@@ -1,0 +1,13 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "done": {
+      ".read": true,
+      ".write": true,
+      "$activityId": {
+        ".validate": "newData.isBoolean() && $activityId.length < 64"
+      }
+    }
+  }
+}
