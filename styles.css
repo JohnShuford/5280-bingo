@@ -117,28 +117,127 @@ main { max-width: 760px; margin: 0 auto; padding: 18px 14px 40px; }
 #map { height: 70vh; min-height: 420px; border-radius: 10px; overflow: hidden; }
 .leaflet-popup-content { font-family: 'Helvetica Neue', Arial, sans-serif; }
 
-/* --- Celebration banner --- */
-.celebrate {
+/* --- Celebrations (BINGO confetti + BLACKOUT rave) --- */
+.celebrate-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Big word (BINGO! / BLACKOUT!) */
+.celebrate-word {
   position: fixed;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none;
-  z-index: 50;
+  z-index: 46;
 }
-.celebrate-text {
+.celebrate-word span {
   font-family: 'Arial Black', sans-serif;
-  font-size: clamp(48px, 16vw, 140px);
+  font-weight: 900;
+  font-size: clamp(54px, 16vw, 150px);
   letter-spacing: 4px;
   color: var(--orange);
   text-shadow: 4px 4px 0 var(--white), 8px 8px 0 var(--blue);
-  animation: pop 1.4s ease forwards;
+  animation: celebrate-pop 1.6s ease forwards;
 }
-.celebrate-text.blackout { color: var(--gold); }
-@keyframes pop {
-  0%   { transform: scale(0.3); opacity: 0; }
-  20%  { transform: scale(1.1); opacity: 1; }
-  70%  { transform: scale(1);   opacity: 1; }
-  100% { transform: scale(1);   opacity: 0; }
+.celebrate-word.blackout span {
+  color: var(--gold);
+  text-shadow: 4px 4px 0 var(--orange), 8px 8px 0 var(--blue);
+}
+@keyframes celebrate-pop {
+  0%   { transform: scale(0.3) rotate(-8deg); opacity: 0; }
+  18%  { transform: scale(1.15) rotate(3deg); opacity: 1; }
+  70%  { transform: scale(1) rotate(0); opacity: 1; }
+  100% { transform: scale(1.05); opacity: 0; }
+}
+
+/* Confetti */
+.celebrate-confetti {
+  position: fixed;
+  top: -12vh;
+  z-index: 42;
+  will-change: transform;
+  animation: celebrate-fall linear forwards;
+}
+@keyframes celebrate-fall {
+  0%   { transform: translateY(0) rotate(0); opacity: 1; }
+  100% { transform: translateY(118vh) rotate(720deg); opacity: 0.9; }
+}
+
+/* Rave strobe wash */
+.celebrate-strobe {
+  position: fixed;
+  inset: 0;
+  z-index: 41;
+  mix-blend-mode: screen;
+  animation: celebrate-strobe 0.18s steps(1) infinite;
+}
+@keyframes celebrate-strobe {
+  0%   { background: rgba(251, 79, 20, 0.30); }
+  25%  { background: rgba(13, 82, 176, 0.30); }
+  50%  { background: rgba(255, 210, 63, 0.28); }
+  75%  { background: rgba(199, 31, 162, 0.30); }
+  100% { background: rgba(0, 229, 255, 0.26); }
+}
+
+/* Sweeping neon lasers */
+.celebrate-laser {
+  position: fixed;
+  bottom: -10vh;
+  width: 8px;
+  height: 150vh;
+  z-index: 43;
+  transform-origin: bottom center;
+  mix-blend-mode: screen;
+  filter: blur(1px);
+  background: linear-gradient(to top, transparent, var(--c) 40%, #fff 50%, var(--c) 60%, transparent);
+  box-shadow: 0 0 24px 6px var(--c);
+  animation: celebrate-sweep 2.2s ease-in-out infinite alternate;
+}
+@keyframes celebrate-sweep {
+  0%   { transform: rotate(-42deg); opacity: 0.5; }
+  100% { transform: rotate(42deg); opacity: 1; }
+}
+
+/* Honorary Coloradan banner */
+.celebrate-banner {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 47;
+  width: min(92vw, 820px);
+  background: linear-gradient(#0d52b0, #093b80);
+  border: 4px solid var(--gold);
+  border-top: none;
+  border-radius: 0 0 18px 18px;
+  padding: 18px 20px 22px;
+  text-align: center;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.55);
+  transform: translateX(-50%) translateY(-140%);
+}
+.celebrate-banner.drop { animation: celebrate-drop 1s cubic-bezier(0.22, 1.4, 0.4, 1) forwards; }
+@keyframes celebrate-drop {
+  0%   { transform: translateX(-50%) translateY(-140%); }
+  70%  { transform: translateX(-50%) translateY(8%); }
+  85%  { transform: translateX(-50%) translateY(-4%); }
+  100% { transform: translateX(-50%) translateY(0); }
+}
+.celebrate-banner .mtn { font-size: 30px; letter-spacing: 6px; }
+.celebrate-banner .title {
+  font-family: 'Arial Black', sans-serif;
+  font-size: clamp(20px, 5vw, 34px);
+  letter-spacing: 2px;
+  margin: 4px 0;
+  color: #fff;
+  text-shadow: 2px 2px 0 var(--orange);
+}
+.celebrate-banner .sub { color: var(--gold); font-weight: 700; letter-spacing: 3px; font-size: 13px; }
+.celebrate-banner .stripe {
+  height: 8px;
+  margin-top: 10px;
+  background: repeating-linear-gradient(90deg, var(--orange) 0 22px, #fff 22px 30px);
 }
